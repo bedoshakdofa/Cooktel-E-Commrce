@@ -1,0 +1,6 @@
+@Cooktel_E_commrece_HostAddress = http://localhost:5159
+
+GET {{Cooktel_E_commrece_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
