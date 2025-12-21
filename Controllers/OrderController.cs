@@ -11,7 +11,6 @@ namespace Cooktel_E_commrece.Controllers
 {
     [ApiController]
     [Route("/api/[Controller]")]
-    //[Authorize]
     public class OrderController:ControllerBase
     {
         private readonly ICartRepository _cartRepository;
@@ -30,7 +29,7 @@ namespace Cooktel_E_commrece.Controllers
             _logger = logger;
         }
 
-
+        [Authorize]
         [HttpPost("Check-out")]
         public async Task<ActionResult> CreateOrder()
         {
@@ -51,9 +50,8 @@ namespace Cooktel_E_commrece.Controllers
             return BadRequest("Faild to created order");
         }
 
-
+        [Authorize]
         [HttpPost("payment-request")]
-
         public async Task<ActionResult> PaymentRequest([FromBody] PaymentRequest request)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -173,11 +171,11 @@ namespace Cooktel_E_commrece.Controllers
 
                 if (isSuccess)
                 {
-
+                    await _paymentService.UpdateOrSccuess(merchantOrderId.ToString());
                 }
                 else
                 {
-
+                    await _paymentService.FailOrSuccess(merchantOrderId.ToString());
                 }
 
             }

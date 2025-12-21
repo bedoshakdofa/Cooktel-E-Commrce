@@ -6,6 +6,10 @@ namespace Cooktel_E_commrece.Interfaces
     public interface IPaymentService
     {
         Task<string> ProcessPaymentAsync(int orderId, PaymentType type, IEnumerable<CartItemsResponse> cartItems);
-        public string ComputeHmacSha512(string data);
+        string ComputeHmacSha512(string data);
+
+        Task FailOrSuccess(string specialRef);
+
+        Task UpdateOrSccuess(string SpecialRef);
     }
 }

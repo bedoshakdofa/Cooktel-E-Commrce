@@ -16,13 +16,11 @@ namespace Cooktel_E_commrece.Services
     {
         private readonly PaymentSettings _paySettings;
         private readonly AppDbContext _context;
-        private readonly ILogger<PaymentService> _logger;
 
-        public PaymentService(IOptions<PaymentSettings> paySettings, AppDbContext context, ILogger<PaymentService> logger)
+        public PaymentService(IOptions<PaymentSettings> paySettings, AppDbContext context )
         {
             _paySettings = paySettings.Value;
             _context = context;
-            _logger = logger;
         }
 
 
@@ -148,6 +146,35 @@ namespace Cooktel_E_commrece.Services
             return redirectUrl;
         }
 
+
+        public async Task UpdateOrSccuess(string specialRef)
+        {
+            var payment=await _context.payments.Include(o=>o.order_payment).FirstOrDefaultAsync(x=>x.TransactionId==specialRef);
+
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment with transaction ID {specialRef} not found.");
+            }
+
+            payment.Status = PaymentStatus.Success;
+            payment.order_payment.OrderStatus=OrderStatus.Paid;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task FailOrSuccess(string specialRef)
+        {
+            var payment = await _context.payments.Include(o => o.order_payment).FirstOrDefaultAsync(x => x.TransactionId == specialRef);
+
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment with transaction ID {specialRef} not found.");
+            }
+
+            payment.Status = PaymentStatus.Failed;
+            payment.order_payment.OrderStatus = OrderStatus.Cancelled;
+            await _context.SaveChangesAsync();
+        }
 
         public string ComputeHmacSha512(string data)
         {
