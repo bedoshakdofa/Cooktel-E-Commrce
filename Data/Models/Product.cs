@@ -43,8 +43,5 @@ namespace Cooktel_E_commrece.Data.Models
         public ICollection<Reviews>Reviews { get; set; }
         public ICollection<OrderItems> OrderItems { get; set; }
         public ICollection<CartItems> CartItems { get; set; }
-
-        public Color Color { get; set; }
-
     }
 }

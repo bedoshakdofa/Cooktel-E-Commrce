@@ -12,5 +12,7 @@ namespace Cooktel_E_commrece.Data.Models
         public string Name { get; set; }
 
         public ICollection<Product> products { get; set; }
+
+        public ICollection<Subcategory> subcategories { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Cooktel_E_commrece.Repository
         public async Task AddItem(Product product, int quantity, int CartId)
         {
             var CartItem = await _context.cartItems.FirstOrDefaultAsync(x => x.CartId == CartId && x.ProductId == product.Id);
-            
+
             if (CartItem == null)
             {
                 var newCartItem = new CartItems
@@ -37,10 +37,7 @@ namespace Cooktel_E_commrece.Repository
             {
                 CartItem.quantity += quantity;
             }
-
-            product.ProductStock-=quantity;
         }
-
         public async Task<IEnumerable<CartItemsResponse>> GetAllItemsInCart(int cartId)
         {
             var query= _context.cartItems.AsNoTracking().AsQueryable();

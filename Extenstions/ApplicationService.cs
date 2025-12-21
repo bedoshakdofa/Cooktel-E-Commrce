@@ -13,7 +13,21 @@ namespace Cooktel_E_commrece.Extenstions
         public static IServiceCollection AddApplicationService(this IServiceCollection services,IConfiguration config) {
 
             services.AddDbContext<AppDbContext>(opt=>opt.UseNpgsql(config.GetConnectionString("Database")));
-            services.Configure<MailSettings>(config.GetSection("MailSettings"));
+            //services.Configure<MailSettings>(config.GetSection("MailSettings"));
+            //services.Configure<PaymentSettings>(config.GetSection("Paymob"));
+
+            //OPTIONS
+            services.AddOptions<MailSettings>()
+                .Bind(config.GetSection("MailSettings"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+            services.AddOptions<PaymentSettings>()
+                .Bind(config.GetSection("Paymob"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+            //SERVICES
             services.AddScoped<IEmailSender, EmailService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService,TokenService>();
@@ -22,6 +36,8 @@ namespace Cooktel_E_commrece.Extenstions
             services.AddScoped<IFileService, FileServices>();
             services.AddScoped<IReviewsRepository,ReviewRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();  
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }

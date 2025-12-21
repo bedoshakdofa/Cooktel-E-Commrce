@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cooktel_E_commrece.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooktel_E_commrece.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216144045_AddPaymentService")]
+    partial class AddPaymentService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,14 +148,14 @@ namespace Cooktel_E_commrece.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Order_ID"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("PaymentId")
+                    b.Property<int>("PaymentId")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -444,7 +447,9 @@ namespace Cooktel_E_commrece.Migrations
                 {
                     b.HasOne("Cooktel_E_commrece.Data.Models.Payment", "payment")
                         .WithOne("order_payment")
-                        .HasForeignKey("Cooktel_E_commrece.Data.Models.Orders", "PaymentId");
+                        .HasForeignKey("Cooktel_E_commrece.Data.Models.Orders", "PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Cooktel_E_commrece.Data.Models.User", "User")
                         .WithMany("Orders")

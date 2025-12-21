@@ -42,6 +42,8 @@ namespace Cooktel_E_commrece.Data.Models
         public ICollection<Reviews> Reviews { get; set; }
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }
+
+        public ICollection<Orders> Orders { get; set; }
         public Cart Cart { get; set; }
 
     }

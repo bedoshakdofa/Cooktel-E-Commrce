@@ -5,7 +5,6 @@ using Cooktel_E_commrece.Extenstions;
 using Cooktel_E_commrece.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Cooktel_E_commrece.Controllers

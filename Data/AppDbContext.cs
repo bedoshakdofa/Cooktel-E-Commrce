@@ -46,6 +46,10 @@ namespace Cooktel_E_commrece.Data
                 .HasOne(py => py.payment)
                 .WithOne(o => o.order_payment);
 
+            modelBuilder.Entity<Orders>()
+                .HasOne(u => u.User)
+                .WithMany(o => o.Orders);
+
             modelBuilder.Entity<Reviews>()
                 .HasOne(u=>u.User)
                 .WithMany(r=>r.Reviews);
@@ -62,6 +66,9 @@ namespace Cooktel_E_commrece.Data
                 .HasOne(x => x.user)
                 .WithMany(r=>r.RefreshTokens);
                 
+            modelBuilder.Entity<Subcategory>()
+                .HasOne(cat=>cat.Category)
+                .WithMany(sub=>sub.subcategories);
 
         }
         public DbSet<RefreshToken> RefreshToken { get; set; }
@@ -71,12 +78,10 @@ namespace Cooktel_E_commrece.Data
         public DbSet<User> users { get; set; }
         public DbSet<Category> categories { get; set; }
         public DbSet<Orders> orders { get; set; }
-
         public DbSet<Reviews> reviews { get; set; }
         public DbSet<Payment> payments { get; set; }
         public DbSet<OrderItems> orderItems { get; set; }
         public DbSet<CartItems> cartItems { get; set; }
-
-        
+        public DbSet<Subcategory> subcategories { get; set; }
     }
 }

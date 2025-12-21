@@ -6,9 +6,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddNewtonsoftJson(opt =>
+//builder.Services.AddControllers().AddNewtonsoftJson(opt =>
+//{
+//    opt.SerializerSettings.Converters.Add(new  StringEnumConverter());
+//});
+
+builder.Services.AddControllers().AddJsonOptions(opt =>
 {
-    opt.SerializerSettings.Converters.Add(new  StringEnumConverter());
+    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

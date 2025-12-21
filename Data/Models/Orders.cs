@@ -12,15 +12,18 @@ namespace Cooktel_E_commrece.Data.Models
         [Required]
         public OrderStatus OrderStatus { get; set; }
         [Required]
-        DateTime CreatedDate { get; set; }
-        [Required]
-        public decimal TotalAmount { get; set; }
+        public DateTime CreatedDate { get; set; }= DateTime.UtcNow;
 
-        [Required]
-        public int PaymentId { get; set; }
+        public int? PaymentId { get; set; }
 
         [ForeignKey("PaymentId")]
-        public Payment payment { get; set; }
+        public Payment? payment { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
 
         public ICollection<OrderItems> OrderItems { get; set; }
     }

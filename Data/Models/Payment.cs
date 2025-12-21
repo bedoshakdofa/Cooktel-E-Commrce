@@ -9,15 +9,15 @@ namespace Cooktel_E_commrece.Data.Models
         public int Id { get; set; }
         [Required]
         public decimal totalAmount { get; set; }
+
+        public string? TransactionId { get; set; }
+
         [Required]
-        public string TransactionId { get; set; }
-        [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }= DateTime.UtcNow;
+
         [Required]
         public PaymentStatus Status { get; set; }
-        [Required]
-
-        public PaymentType Type { get; set; }
+        public PaymentType ?Type { get; set; }
 
         public Orders order_payment { get; set; }
 
