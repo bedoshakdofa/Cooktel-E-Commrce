@@ -3,6 +3,7 @@ namespace Cooktel_E_commrece.Dtos
 {
     public class ProductWithReviews
     {
+        public int id { get; set; }
         public string ProductName { get; set; }
         public string ProductDescription { get; set; }
       

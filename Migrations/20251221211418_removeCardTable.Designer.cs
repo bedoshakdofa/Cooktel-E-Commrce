@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cooktel_E_commrece.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooktel_E_commrece.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251221211418_removeCardTable")]
+    partial class removeCardTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,6 +174,9 @@ namespace Cooktel_E_commrece.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("integer");
+
                     b.PrimitiveCollection<List<string>>("Image")
                         .IsRequired()
                         .HasColumnType("text[]");
@@ -195,9 +201,6 @@ namespace Cooktel_E_commrece.Migrations
                     b.Property<int>("ProductStock")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SubCategoryID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("color")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -210,7 +213,7 @@ namespace Cooktel_E_commrece.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubCategoryID");
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("products");
                 });
@@ -372,7 +375,7 @@ namespace Cooktel_E_commrece.Migrations
                     b.HasOne("Cooktel_E_commrece.Data.Models.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -391,7 +394,7 @@ namespace Cooktel_E_commrece.Migrations
                     b.HasOne("Cooktel_E_commrece.Data.Models.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("Product_ID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -408,7 +411,7 @@ namespace Cooktel_E_commrece.Migrations
                     b.HasOne("Cooktel_E_commrece.Data.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -418,13 +421,13 @@ namespace Cooktel_E_commrece.Migrations
 
             modelBuilder.Entity("Cooktel_E_commrece.Data.Models.Product", b =>
                 {
-                    b.HasOne("Cooktel_E_commrece.Data.Models.Subcategory", "subcategory")
+                    b.HasOne("Cooktel_E_commrece.Data.Models.Category", "Category")
                         .WithMany("products")
-                        .HasForeignKey("SubCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("subcategory");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Cooktel_E_commrece.Data.Models.RefreshToken", b =>
@@ -462,7 +465,7 @@ namespace Cooktel_E_commrece.Migrations
                     b.HasOne("Cooktel_E_commrece.Data.Models.Category", "Category")
                         .WithMany("subcategories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -475,6 +478,8 @@ namespace Cooktel_E_commrece.Migrations
 
             modelBuilder.Entity("Cooktel_E_commrece.Data.Models.Category", b =>
                 {
+                    b.Navigation("products");
+
                     b.Navigation("subcategories");
                 });
 
@@ -495,11 +500,6 @@ namespace Cooktel_E_commrece.Migrations
                     b.Navigation("OrderItems");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("Cooktel_E_commrece.Data.Models.Subcategory", b =>
-                {
-                    b.Navigation("products");
                 });
 
             modelBuilder.Entity("Cooktel_E_commrece.Data.Models.User", b =>

@@ -35,10 +35,10 @@ namespace Cooktel_E_commrece.Data.Models
         public int ProductStock { get; set; }
 
         [Required]
-        public int CategoryID { get; set; }
+        public int SubCategoryID { get; set; }
 
-        [ForeignKey("CategoryID")]
-        public Category Category { get; set; }
+        [ForeignKey("SubCategoryID")]
+        public Subcategory subcategory { get; set; }
 
         public ICollection<Reviews>Reviews { get; set; }
         public ICollection<OrderItems> OrderItems { get; set; }

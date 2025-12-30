@@ -6,8 +6,11 @@ namespace Cooktel_E_commrece.Interfaces
 {
     public interface IOrderRepository
     {
-        void Create(IEnumerable< CartItemsResponse >cartItems, Guid userID);
+        OrderDto Create(IEnumerable< CartItemsResponse >cartItems, Guid userID);
 
+        Task<IReadOnlyCollection<OrderDto>>GetAllOrder(Guid Userid);
+
+        Task RemoveOrder(int id);
         Task<bool> SaveChangesAsync();
     }
 }

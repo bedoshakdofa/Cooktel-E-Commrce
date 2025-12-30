@@ -13,10 +13,12 @@ namespace Cooktel_E_commrece.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewsRepository _reviewsRepository;
+        private readonly ICachingService _cachingService;
 
-        public ReviewsController(IReviewsRepository reviewsRepository)
+        public ReviewsController(IReviewsRepository reviewsRepository, ICachingService cachingService)
         {
             _reviewsRepository = reviewsRepository;
+            _cachingService = cachingService;
         }
 
         [HttpPost("Add")]
@@ -36,7 +38,10 @@ namespace Cooktel_E_commrece.Controllers
             _reviewsRepository.CreateReview(newReview);
 
             if (await _reviewsRepository.SaveChanges())
+            {
+                await _cachingService.RemoveCache<ProductResponse>($"product:{request.Product_ID}");
                 return Ok("Review Added");
+            }
 
             return BadRequest("Can't added review");
         }
@@ -58,7 +63,10 @@ namespace Cooktel_E_commrece.Controllers
             _reviewsRepository.DeleteReview(review);
 
             if (await _reviewsRepository.SaveChanges())
+            {
+                await _cachingService.RemoveCache<ProductWithReviews>($"product:{review.Product_ID}");
                 return Ok("Review Deleted");
+            }
 
             return BadRequest("Can't Deleted review");
         }
@@ -80,7 +88,10 @@ namespace Cooktel_E_commrece.Controllers
             review.Comment = comment;
 
             if (await _reviewsRepository.SaveChanges())
+            {
+                await _cachingService.RemoveCache<ProductWithReviews>($"product:{review.Product_ID}");
                 return Ok("Review Updated");
+            }
             return BadRequest("Can't Update review");
         }
     }

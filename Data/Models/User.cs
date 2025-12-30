@@ -38,7 +38,6 @@ namespace Cooktel_E_commrece.Data.Models
 
         public bool isDeleted { get; set; }=false;
 
-        public ICollection<CardNumber> CardNumbers { get; set; }
         public ICollection<Reviews> Reviews { get; set; }
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }

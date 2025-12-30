@@ -1,10 +1,11 @@
 ﻿using Cooktel_E_commrece.Data.Models;
+using Cooktel_E_commrece.Dtos;
 
 namespace Cooktel_E_commrece.Interfaces
 {
     public interface ISubCategoryRepository
     {
-        Task<IEnumerable<Subcategory>> GetAll(int categoryId);
+        Task<IEnumerable<SubCategoryDto>> GetAll(int categoryId);
 
         void Add(Subcategory subcategory);
 

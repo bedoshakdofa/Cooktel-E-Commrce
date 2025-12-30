@@ -2,6 +2,7 @@
 {
     public class SubCategoryDto
     {
+        public int id { get; set; }
         public string Sub_Name { get; set; }
 
         public int CategoryId { get; set; }

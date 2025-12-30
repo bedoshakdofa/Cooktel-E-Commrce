@@ -30,6 +30,6 @@ namespace Cooktel_E_commrece.Dtos
 
         [Required]
         public int ProductStock { get; set; }
-        public CategoryDto Category { get; set; }
+        public SubCategoryDto subCategory { get; set; }
     }
 }

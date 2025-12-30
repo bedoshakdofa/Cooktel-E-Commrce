@@ -38,6 +38,7 @@ namespace Cooktel_E_commrece.Repository
         public async Task<PagedList<ProductResponse>> GetAll(FilterParams userParams)
         {
            var query=_context.products
+                .Include(x=>x.subcategory)
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -61,9 +62,14 @@ namespace Cooktel_E_commrece.Repository
                 };
              }
 
-            if (userParams.categoryId>0)
+            if (userParams.SubCategoryId > 0)
             {
-                query=query.Where(cat=>cat.CategoryID==userParams.categoryId);
+                query = query.Where(x=>x.SubCategoryID==userParams.SubCategoryId);
+            }
+
+            if (userParams.categoryId > 0)
+            {
+                query=query.Where(x=>x.subcategory.CategoryId==userParams.categoryId);
             }
 
             return await PagedList<ProductResponse>.CreateAsync(query.ProjectTo<ProductResponse>(_mapper.ConfigurationProvider),
@@ -81,9 +87,10 @@ namespace Cooktel_E_commrece.Repository
 
             var result = await query.AsNoTracking()
                 .Include(x => x.Reviews)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .ProjectTo<ProductWithReviews>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(x => x.id == id);
 
-            return _mapper.Map<ProductWithReviews>(result);
+            return result;
         }
 
         public void UpdateProduct(JsonPatchDocument<ProductResponse> productDto,Product product, ModelStateDictionary modelState)
@@ -93,6 +100,11 @@ namespace Cooktel_E_commrece.Repository
             productDto.ApplyTo(productInDto, modelState);
 
             _mapper.Map(productInDto, product);
+        }
+
+        public void ReduceProductStock(Product prod)
+        {
+            prod.ProductStock--;
         }
 
         public async Task<bool> SaveChanges()

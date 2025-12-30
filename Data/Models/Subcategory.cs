@@ -12,5 +12,7 @@ namespace Cooktel_E_commrece.Data.Models
 
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
+
+        public ICollection<Product> products { get; set; }
     }
 }

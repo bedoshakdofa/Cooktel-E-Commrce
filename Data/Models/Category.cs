@@ -10,9 +10,6 @@ namespace Cooktel_E_commrece.Data.Models
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
-
-        public ICollection<Product> products { get; set; }
-
         public ICollection<Subcategory> subcategories { get; set; }
     }
 }

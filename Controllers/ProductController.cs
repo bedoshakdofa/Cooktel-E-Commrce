@@ -17,11 +17,16 @@ namespace Cooktel_E_commrece.Controllers
         private readonly IFileService _fileService;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, IMapper mapper, IFileService fileService)
+        private readonly ICachingService _cachingService;
+        public ProductController(IProductRepository productRepository,
+            IMapper mapper, 
+            IFileService fileService,
+            ICachingService cachingService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _fileService = fileService;
+            _cachingService = cachingService;
         }
 
         [HttpGet]
@@ -49,11 +54,18 @@ namespace Cooktel_E_commrece.Controllers
 
         public async Task<ActionResult<ProductWithReviews>> GetProduct([FromRoute] int id)
         {
-            var product = await _productRepository.GetProductWithReview(id);
+            var cacheKey = $"product:{id}";
+            var product= _cachingService.GetData<ProductWithReviews>(cacheKey);
 
-            if (product == null) {
-                return NotFound("No Product with is id");
+            if (product is not null)
+            {
+                HttpContext.AddImageLink(product.Image);
+                return Ok(product);
             }
+
+            product = await _productRepository.GetProductWithReview(id);
+
+            _cachingService.SetData(cacheKey, product);
 
             HttpContext.AddImageLink(product.Image);
 
@@ -61,6 +73,7 @@ namespace Cooktel_E_commrece.Controllers
         }
 
         [HttpPost("Add")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> AddProduct([FromForm] ProductRequest productDto)
         {
             if (!ModelState.IsValid)
@@ -75,7 +88,7 @@ namespace Cooktel_E_commrece.Controllers
 
             if (await _productRepository.SaveChanges())
             {
-                return Ok(product);
+                return Ok("Product created successfully");
             }
             else
             {
@@ -94,7 +107,10 @@ namespace Cooktel_E_commrece.Controllers
             _productRepository.UpdateProduct(productDto,product,ModelState);
 
             if (await _productRepository.SaveChanges())
-                return Ok(product);
+            {
+                await _cachingService.RemoveCache<Product>($"product:{product.Id}");
+                return Ok("product updated");
+            }
             return BadRequest("can't save to database");
         }
 
@@ -112,6 +128,8 @@ namespace Cooktel_E_commrece.Controllers
                 {
                     _fileService.DeleteFile(img);
                 }
+                await _cachingService.RemoveCache<Product>($"product:{product.Id}");
+
                 return Ok("product Deleted");
             }
             return BadRequest("Can't deleted product");
@@ -119,6 +137,7 @@ namespace Cooktel_E_commrece.Controllers
 
 
         [HttpPut("Upload-Img/{id}")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult>UploadImage(int id, [FromForm]IFormFile img)
         {
             var product= await _productRepository.GetById(id);

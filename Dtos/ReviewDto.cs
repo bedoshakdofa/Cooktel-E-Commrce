@@ -8,6 +8,6 @@ namespace Cooktel_E_commrece.Dtos
         public int Id { get; set; }
         [Required]
         public string Comment { get; set; }
-        DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

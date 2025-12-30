@@ -1,5 +1,4 @@
 ﻿using Cooktel_E_commrece.Data.Models.Enum;
-using Cooktel_E_commrece.Data.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Cooktel_E_commrece.Dtos

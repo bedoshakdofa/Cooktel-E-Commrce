@@ -13,10 +13,6 @@ namespace Cooktel_E_commrece.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<CardNumber>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.CardNumbers);
-
             modelBuilder.Entity<Cart>()
                 .HasOne(x => x.User)
                 .WithOne(x=>x.Cart);
@@ -26,7 +22,8 @@ namespace Cooktel_E_commrece.Data
 
             modelBuilder.Entity<CartItems>()
                 .HasOne(p => p.Product)
-                .WithMany(p => p.CartItems);
+                .WithMany(p => p.CartItems)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CartItems>()
                 .HasOne(c => c.cart)
@@ -37,10 +34,12 @@ namespace Cooktel_E_commrece.Data
 
             modelBuilder.Entity<OrderItems>()
                 .HasOne(p=>p.Product)
-                .WithMany(o=>o.OrderItems);
+                .WithMany(o=>o.OrderItems)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<OrderItems>()
-                .HasOne(or=>or.orders)
-                .WithMany(ort=>ort.OrderItems);
+                .HasOne(or => or.orders)
+                .WithMany(ort => ort.OrderItems);
 
             modelBuilder.Entity<Orders>()
                 .HasOne(py => py.payment)
@@ -48,7 +47,8 @@ namespace Cooktel_E_commrece.Data
 
             modelBuilder.Entity<Orders>()
                 .HasOne(u => u.User)
-                .WithMany(o => o.Orders);
+                .WithMany(o => o.Orders)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Reviews>()
                 .HasOne(u=>u.User)
@@ -59,8 +59,9 @@ namespace Cooktel_E_commrece.Data
                 .WithMany(r => r.Reviews);
 
             modelBuilder.Entity<Product>()
-                .HasOne(ctg => ctg.Category)
-                .WithMany(p => p.products);
+                .HasOne(ctg => ctg.subcategory)
+                .WithMany(p => p.products)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RefreshToken>()
                 .HasOne(x => x.user)
@@ -68,11 +69,11 @@ namespace Cooktel_E_commrece.Data
                 
             modelBuilder.Entity<Subcategory>()
                 .HasOne(cat=>cat.Category)
-                .WithMany(sub=>sub.subcategories);
+                .WithMany(sub=>sub.subcategories)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
         public DbSet<RefreshToken> RefreshToken { get; set; }
-        public DbSet<CardNumber> CardNumbers { get; set; }
         public DbSet<Cart> carts { get; set; }
         public DbSet<Product> products { get; set; }
         public DbSet<User> users { get; set; }

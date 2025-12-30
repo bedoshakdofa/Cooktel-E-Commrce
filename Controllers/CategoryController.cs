@@ -9,9 +9,11 @@ namespace Cooktel_E_commrece.Controllers
     public class CategoryController:ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository categoryRepository)
+        private readonly ICachingService _cachingService;
+        public CategoryController(ICategoryRepository categoryRepository, ICachingService cachingService)
         {
             _categoryRepository = categoryRepository;
+            _cachingService = cachingService;
         }
 
         [HttpPost("Add")]
@@ -22,6 +24,8 @@ namespace Cooktel_E_commrece.Controllers
                 return BadRequest("please enter vaild input");
             }
             _categoryRepository.Create(name);
+
+            await _cachingService.RemoveCache<Category>("category");
 
             await _categoryRepository.SaveChanges();
 
@@ -40,6 +44,7 @@ namespace Cooktel_E_commrece.Controllers
             }
 
             _categoryRepository.Delete(category);
+            await _cachingService.RemoveCache<Category>("category");
 
             await _categoryRepository.SaveChanges();
 
@@ -57,6 +62,7 @@ namespace Cooktel_E_commrece.Controllers
             }
             category.Name=Newname;
 
+            await _cachingService.RemoveCache<Category>("category");
             await _categoryRepository.SaveChanges();
 
             return Ok("category updated successfully");
@@ -65,12 +71,19 @@ namespace Cooktel_E_commrece.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategory()
         {
-            var category=await _categoryRepository.GetAll();
+            var category = _cachingService.GetData<IEnumerable<Category>>("category");
 
-            if (category == null) { 
-                return NotFound("there is not category");
+            if (category!=null)
+            {
+                return Ok(category);
             }
+            
+            category=await _categoryRepository.GetAll();
 
+            if (!category.Any())
+                return NotFound("there is no category");
+
+            _cachingService.SetData("category", category);
             return Ok(category);
         }
     }

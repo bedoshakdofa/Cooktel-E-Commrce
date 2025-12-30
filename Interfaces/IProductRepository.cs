@@ -20,6 +20,8 @@ namespace Cooktel_E_commrece.Interfaces
 
         Task<ProductWithReviews> GetProductWithReview(int id);
 
+        void ReduceProductStock(Product prod);
+
         Task<bool> SaveChanges();
 
     }

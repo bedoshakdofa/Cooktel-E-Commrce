@@ -9,5 +9,7 @@
         public string size { get; set; }
 
         public int categoryId { get; set; }
+
+        public int SubCategoryId { get; set; }
     }
 }

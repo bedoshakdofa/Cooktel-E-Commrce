@@ -18,7 +18,7 @@ namespace Cooktel_E_commrece.Helper
             CreateMap<Product, ProductRequest>();
             CreateMap<Product, ProductResponse>();
             CreateMap<ProductResponse, Product>()
-                .ForMember(src=>src.CategoryID,opt=>opt.Ignore());
+                .ForMember(src=>src.SubCategoryID,opt=>opt.Ignore());
             CreateMap<Product, ProductWithReviews>();
 
             //Category Mapping
@@ -30,6 +30,11 @@ namespace Cooktel_E_commrece.Helper
             //CartItemMapping
 
             CreateMap<CartItems,CartItemsResponse>();
+
+            CreateMap<Orders,OrderDto>();
+
+            CreateMap<Subcategory,SubCategoryDto>().ReverseMap();
         }
     }
 }
+
